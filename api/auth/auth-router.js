@@ -59,6 +59,8 @@ router.post('/login', async (req, res) => {
         const token = buildToken(user)
         console.log('else if')
         res.status(200).json({ message: `welcome, ${user.username}`, token: token })
+      } else {
+        res.status(400).json('invalid credentials')
       }
     }
   } else if(req.body.username === undefined || req.body.password === undefined) {
