@@ -9,12 +9,14 @@ function findById(user_id) {
 }
 
 async function add({ username, password }) {
-    let created_user_id
-    await db.transaction(async trx => {
-        const [user_id] = await trx('users').insert({ username, password })
-        created_user_id = user_id
-    })
-    return findById(created_user_id)
+    // let created_user_id
+    // await db.transaction(async trx => {
+    //     const [user_id] = await trx('users').insert({ username, password })
+    //     created_user_id = user_id
+    // })
+    // return findById(created_user_id)
+    const [user] = await db('users').insert({ username, password })
+    return findById(user)
 }
 
 module.exports = {
