@@ -8,9 +8,9 @@ router.post('/register', async (req, res, next) => {
   const checkIfExists = await User.findUsername(username)
 
   if(checkIfExists) {
-    res.status(400).send('username taken')
+    res.status(400).json('username taken')
   } else if (username === undefined || password === undefined) {
-    res.status(400).send('username and password required')
+    res.status(400).json('username and password required')
   } else {
     const hash = bcrypt.hashSync(password, 8)
     User.add({ username, password: hash})
@@ -53,7 +53,7 @@ router.post('/login', async (req, res) => {
   if (req.body.username && req.body.password) {
     const user = await User.findUsername(req.body.username)
     if(!user){
-      res.send('invalid credentials')
+      res.status(400).json('invalid credentials')
     } else {
       if (bcrypt.compareSync(req.body.password, user.password)){
         const token = buildToken(user)
@@ -62,7 +62,7 @@ router.post('/login', async (req, res) => {
       }
     }
   } else if(req.body.username === undefined || req.body.password === undefined) {
-    res.send('username and password required')
+    res.status(400).json('username and password required')
   }
   // res.end('implement login, please!');
   /*
