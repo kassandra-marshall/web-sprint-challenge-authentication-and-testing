@@ -14,7 +14,7 @@ afterAll(async () => {
   await db.destroy()
 })
 
-jest.setTimeout(7500)
+// jest.setTimeout(7500)
 // how to reset db after each test?
 
 describe('[POST] /api/auth/register', () => {
