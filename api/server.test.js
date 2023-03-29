@@ -64,9 +64,20 @@ describe('[POST] /api/auth/login', () => {
   })
 })
 
-describe('[GET]', () => {
-  test('get request', async () => {
-    let res = await request(server).get('/api/jokes')
+describe('[GET] /api/jokes', () => {
+  test('cannot get access to jokes without token', async () => {
+    const res = await request(server).get('/api/jokes')
+    expect(res.text).toMatch(/token required/i)
+  })
+  test('cannot access jokes without valid token', async () => {
+    const res = await request(server).get('/api/jokes').set('Authorization', 'foobar')
+    expect(res.text).toMatch(/token invalid/i)
+  })
+  test('can retrieve jokes with valid token', async () => {
+    const login = { username: 'Captain Marvel', password: 'foobar' }
+    await request(server).post('/api/auth/register').send(login)
+    let res = await request(server).post('/api/auth/login').send(login)
+    res = await request(server).get('/api/jokes').send('Authorization', res.body.token)
     expect(res.body).toBeDefined()
   })
 })
