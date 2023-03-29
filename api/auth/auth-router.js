@@ -50,21 +50,25 @@ router.post('/register', async (req, res, next) => {
 router.post('/login', async (req, res) => {
   console.log(req.body)
   // req.body === undefined no user
-  if (req.body.username && req.body.password) {
-    const user = await User.findUsername(req.body.username)
-    if(!user){
-      res.status(400).json('invalid credentials')
-    } else {
-      if (bcrypt.compareSync(req.body.password, user.password)){
-        const token = buildToken(user)
-        console.log('else if')
-        res.status(200).json({ message: `welcome, ${user.username}`, token: token })
-      } else {
-        res.status(400).json('invalid credentials')
-      }
-    }
-  } else if(req.body.username === undefined || req.body.password === undefined) {
+  if(req.body.password === undefined){
     res.status(400).json('username and password required')
+  } else {
+    if (req.body.username && req.body.password) {
+      const user = await User.findUsername(req.body.username)
+      if(!user){
+        res.status(400).json('invalid credentials')
+      } else {
+        if (bcrypt.compareSync(req.body.password, user.password)){
+          const token = buildToken(user)
+          console.log('else if')
+          res.status(200).json({ message: `welcome, ${user.username}`, token: token })
+        } else {
+          res.status(400).json('invalid credentials')
+        }
+      }
+    } else if(req.body.username === undefined || req.body.password === undefined) {
+      res.status(400).json('username and password required')
+  }
   }
   // res.end('implement login, please!');
   /*

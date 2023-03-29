@@ -41,7 +41,7 @@ describe('[POST] /api/auth/register', () => {
 
 describe('[POST] /api/auth/login', () => {
   const user = { username: 'foobar', password: 'foobarbazz' }
-  // const missingUsername = { password: 'foobar' }
+  const missingUsername = { password: 'foobar' }
   const missingPassword = { username: 'Captain Marvel' }
   const invalid = { username: 'Captain America', password: 'foobar' }
   test('on successful login, the response body should have message and token', async () => {
@@ -52,9 +52,9 @@ describe('[POST] /api/auth/login', () => {
   })
   test('on failed login due to the missing username or password, response should have correct message', async () => {
     const message = 'username and password required'
-    // let res = await request(server).post('/api/auth/login').send(missingUsername)
-    // expect(res.text).toMatch(message)
-    const res = await request(server).post('/api/auth/login').send(missingPassword)
+    let res = await request(server).post('/api/auth/login').send(missingUsername)
+    expect(res.text).toMatch(message)
+    res = await request(server).post('/api/auth/login').send(missingPassword)
     expect(res.text).toMatch(message)
   })
   test('on failed login due to incorrect credentials, response should have correct message', async () => {
