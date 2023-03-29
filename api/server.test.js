@@ -3,6 +3,8 @@ const db = require('../data/dbConfig');
 const request = require('supertest');
 const server = require('./server');
 
+jest.setTimeout(750)
+
 beforeAll(async () => {
   await db.migrate.rollback()
   await db.migrate.latest()
@@ -13,9 +15,6 @@ beforeEach(async () => {
 afterAll(async () => {
   await db.destroy()
 })
-
-// jest.setTimeout(7500)
-// how to reset db after each test?
 
 describe('[POST] /api/auth/register', () => {
   const newUser = { username: 'Captain Marvel', password: 'foobar' }

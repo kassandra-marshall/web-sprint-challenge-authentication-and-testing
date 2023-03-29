@@ -64,7 +64,7 @@ router.post('/login', async (req, res) => {
           res.status(400).json('invalid credentials')
         }
       }
-    } else if(req.body.username === undefined || req.body.password === undefined) {
+    } else if(req.body.username === undefined) {
       res.status(400).json('username and password required')
   }
   }
