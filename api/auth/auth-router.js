@@ -5,20 +5,23 @@ const User = require('../users/users-model')
 
 router.post('/register', async (req, res, next) => {
   const { username, password } = req.body
-  const checkIfExists = await User.findUsername(username)
 
-  if(checkIfExists) {
-    res.status(400).json('username taken')
-  } else if (username === undefined || password === undefined) {
+  if(username === undefined || password === undefined) {
     res.status(400).json('username and password required')
-  } else {
-    const hash = bcrypt.hashSync(password, 8)
-    User.add({ username, password: hash})
-    .then(saved => {
-      res.status(201).json(saved)
-    })
-    .catch(next)
-  }
+    
+  } else if (username && password) {
+    const checkIfExists = await User.findUsername(username)
+    if(checkIfExists){
+      res.status(400).json('username taken')
+    } else {
+      const hash = bcrypt.hashSync(password, 8)
+      User.add({ username, password: hash})
+      .then(saved => {
+        res.status(201).json(saved)
+      })
+      .catch(next)
+    }
+  } 
   // res.end('implement register, please!');
   /*
     IMPLEMENT
